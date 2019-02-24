@@ -19,3 +19,15 @@ after_success:
   - docker push kevinfdtr/multi-server
   - docker push kevinfdtr/multi-worker
   
+deploy:
+  provider: elasticbeanstalk
+  regios: us-east-2
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-east-2-827324543565
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: 
+    secure: $AWS_SECRET_KEY
