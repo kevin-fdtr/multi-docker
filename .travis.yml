@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t kevinfdtr/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run kevinfdtr/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t kevinfdtr/multi-client ./client
+  - docker build -t kevinfdtr/multi-nginx ./nginx
+  - docker build -t kevinfdtr/multi-server ./server
+  - docker build -t kevinfdtr/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | "docker login -u "$DOCKER_ID" --password-stdin
+  - docker push kevinfdtr/multi-client
+  - docker push kevinfdtr/multi-nginx
+  - docker push kevinfdtr/multi-server
+  - docker push kevinfdtr/multi-worker
+  
